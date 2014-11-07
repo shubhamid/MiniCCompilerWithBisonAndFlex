@@ -1,0 +1,2072 @@
+Grammar
+
+    0 $accept: s $end
+
+    1 s: HFILE s
+    2  | DEFINE s
+    3  | Stmt
+    4  | MainFunc
+
+    5 MainFunc: TYPE MAIN OB CB CompStmt
+
+    6 Stmt: ifstmt Stmt
+    7     | ifstmt CompStmt
+    8     | PrintFunc Stmt
+    9     | ScanFunc Stmt
+   10     | WhileStmt Stmt
+   11     | WhileStmt CompStmt
+   12     | ForStmt Stmt
+   13     | ForStmt CompStmt
+   14     | SwitchCase Stmt
+   15     | StructStmt Stmt
+   16     | Assign Stmt
+   17     | DeclarationM Stmt
+   18     | DoWhile Stmt
+   19     | FuncDef CompStmt
+   20     | %empty
+
+   21 CompStmt: LB Stmt RB Stmt
+
+   22 DeclarationM: TYPE Declaration
+
+   23 Declaration: ID DeclarationC
+   24            | ID EQ NUM DeclarationC
+   25            | ID EQ ID DeclarationC
+
+   26 DeclarationC: COMMA Declaration
+   27             | sc
+
+   28 ArgumentM: TYPE ID ArgumentC
+   29          | %empty
+
+   30 ArgumentC: COMMA ArgumentM
+   31          | %empty
+
+   32 StructStmt: STRUCT ID LB DeclarationS RB sc
+
+   33 DeclarationS: DeclarationM DeclarationS
+   34             | %empty
+
+   35 FuncCall: ID OB CB
+
+   36 FuncDef: TYPE ID OB ArgumentM CB
+
+   37 SwitchCase: SWITCH OB ID CB LB SwitchStmt DefaultStmt RB
+
+   38 SwitchStmt: CASE NUM COLON Stmt BREAK sc SwitchStmt
+   39           | %empty
+
+   40 DefaultStmt: DEFAULT COLON Stmt
+   41            | %empty
+
+   42 ForStmt: FOR OB Assign sc expr sc AssignF CB
+
+   43 WhileStmt: WHILE OB expr CB
+
+   44 DoWhile: DO LB Stmt RB WhileStmt sc
+
+   45 ifstmt: IF OB expr CB
+
+   46 PrintFunc: PRINTF OB STRING ArgumentS CB sc
+
+   47 ScanFunc: SCANF OB STRING ArgumentS CB sc
+
+   48 ArgumentS: COMMA AMP ID ArgumentS
+   49          | COMMA ID ArgumentS
+   50          | %empty
+
+   51 Assign: ID
+   52       | NUM
+   53       | FuncCall sc
+   54       | FuncCall EQ Assign
+   55       | ID arithop Assign
+   56       | ID EQ Assign
+   57       | ID shorthand Assign
+   58       | NUM shorthand Assign
+   59       | sc
+
+   60 AssignF: ID
+   61        | NUM
+   62        | ID EQ AssignF
+   63        | ID shorthand AssignF
+   64        | NUM shorthand AssignF
+   65        | %empty
+
+   66 expr: NUM
+   67     | ID
+   68     | NUM relop ID
+   69     | NUM relop NUM
+   70     | ID relop ID
+   71     | ID relop NUM
+   72     | ID arithop ID
+   73     | ID arithop NUM
+   74     | %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+FOR (258) 42
+IF (259) 45
+OB (260) 5 35 36 37 42 43 45 46 47
+CB (261) 5 35 36 37 42 43 45 46 47
+NUM (262) 24 38 52 58 61 64 66 68 69 71 73
+ID (263) 23 24 25 28 32 35 36 37 48 49 51 55 56 57 60 62 63 67 68 70
+    71 72 73
+relop (264) 68 69 70 71
+PRINTF (265) 46
+sc (266) 27 32 38 42 44 46 47 53 59
+WHILE (267) 43
+LB (268) 21 32 37 44
+RB (269) 21 32 37 44
+arithop (270) 55 72 73
+EQ (271) 24 25 54 56 62
+STRUCT (272) 32
+shorthand (273) 57 58 63 64
+TYPE (274) 5 22 28 36
+COMMA (275) 26 30 48 49
+SCANF (276) 47
+HFILE (277) 1
+DEFINE (278) 2
+MAIN (279) 5
+DO (280) 44
+SWITCH (281) 37
+CASE (282) 38
+COLON (283) 38 40
+DEFAULT (284) 40
+BREAK (285) 38
+STRING (286) 46 47
+AMP (287) 48
+
+
+Nonterminals, with rules where they appear
+
+$accept (33)
+    on left: 0
+s (34)
+    on left: 1 2 3 4, on right: 0 1 2
+MainFunc (35)
+    on left: 5, on right: 4
+Stmt (36)
+    on left: 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20, on right: 3
+    6 8 9 10 12 14 15 16 17 18 21 38 40 44
+CompStmt (37)
+    on left: 21, on right: 5 7 11 13 19
+DeclarationM (38)
+    on left: 22, on right: 17 33
+Declaration (39)
+    on left: 23 24 25, on right: 22 26
+DeclarationC (40)
+    on left: 26 27, on right: 23 24 25
+ArgumentM (41)
+    on left: 28 29, on right: 30 36
+ArgumentC (42)
+    on left: 30 31, on right: 28
+StructStmt (43)
+    on left: 32, on right: 15
+DeclarationS (44)
+    on left: 33 34, on right: 32 33
+FuncCall (45)
+    on left: 35, on right: 53 54
+FuncDef (46)
+    on left: 36, on right: 19
+SwitchCase (47)
+    on left: 37, on right: 14
+SwitchStmt (48)
+    on left: 38 39, on right: 37 38
+DefaultStmt (49)
+    on left: 40 41, on right: 37
+ForStmt (50)
+    on left: 42, on right: 12 13
+WhileStmt (51)
+    on left: 43, on right: 10 11 44
+DoWhile (52)
+    on left: 44, on right: 18
+ifstmt (53)
+    on left: 45, on right: 6 7
+PrintFunc (54)
+    on left: 46, on right: 8
+ScanFunc (55)
+    on left: 47, on right: 9
+ArgumentS (56)
+    on left: 48 49 50, on right: 46 47 48 49
+Assign (57)
+    on left: 51 52 53 54 55 56 57 58 59, on right: 16 42 54 55 56 57
+    58
+AssignF (58)
+    on left: 60 61 62 63 64 65, on right: 42 62 63 64
+expr (59)
+    on left: 66 67 68 69 70 71 72 73 74, on right: 42 43 45
+
+
+State 0
+
+    0 $accept: . s $end
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 9
+    SCANF   shift, and go to state 10
+    HFILE   shift, and go to state 11
+    DEFINE  shift, and go to state 12
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    s             go to state 15
+    MainFunc      go to state 16
+    Stmt          go to state 17
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 1
+
+   42 ForStmt: FOR . OB Assign sc expr sc AssignF CB
+
+    OB  shift, and go to state 30
+
+
+State 2
+
+   45 ifstmt: IF . OB expr CB
+
+    OB  shift, and go to state 31
+
+
+State 3
+
+   52 Assign: NUM .
+   58       | NUM . shorthand Assign
+
+    shorthand  shift, and go to state 32
+
+    $default  reduce using rule 52 (Assign)
+
+
+State 4
+
+   35 FuncCall: ID . OB CB
+   51 Assign: ID .
+   55       | ID . arithop Assign
+   56       | ID . EQ Assign
+   57       | ID . shorthand Assign
+
+    OB         shift, and go to state 33
+    arithop    shift, and go to state 34
+    EQ         shift, and go to state 35
+    shorthand  shift, and go to state 36
+
+    $default  reduce using rule 51 (Assign)
+
+
+State 5
+
+   46 PrintFunc: PRINTF . OB STRING ArgumentS CB sc
+
+    OB  shift, and go to state 37
+
+
+State 6
+
+   59 Assign: sc .
+
+    $default  reduce using rule 59 (Assign)
+
+
+State 7
+
+   43 WhileStmt: WHILE . OB expr CB
+
+    OB  shift, and go to state 38
+
+
+State 8
+
+   32 StructStmt: STRUCT . ID LB DeclarationS RB sc
+
+    ID  shift, and go to state 39
+
+
+State 9
+
+    5 MainFunc: TYPE . MAIN OB CB CompStmt
+   22 DeclarationM: TYPE . Declaration
+   36 FuncDef: TYPE . ID OB ArgumentM CB
+
+    ID    shift, and go to state 40
+    MAIN  shift, and go to state 41
+
+    Declaration  go to state 42
+
+
+State 10
+
+   47 ScanFunc: SCANF . OB STRING ArgumentS CB sc
+
+    OB  shift, and go to state 43
+
+
+State 11
+
+    1 s: HFILE . s
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 9
+    SCANF   shift, and go to state 10
+    HFILE   shift, and go to state 11
+    DEFINE  shift, and go to state 12
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    s             go to state 44
+    MainFunc      go to state 16
+    Stmt          go to state 17
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 12
+
+    2 s: DEFINE . s
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 9
+    SCANF   shift, and go to state 10
+    HFILE   shift, and go to state 11
+    DEFINE  shift, and go to state 12
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    s             go to state 45
+    MainFunc      go to state 16
+    Stmt          go to state 17
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 13
+
+   44 DoWhile: DO . LB Stmt RB WhileStmt sc
+
+    LB  shift, and go to state 46
+
+
+State 14
+
+   37 SwitchCase: SWITCH . OB ID CB LB SwitchStmt DefaultStmt RB
+
+    OB  shift, and go to state 47
+
+
+State 15
+
+    0 $accept: s . $end
+
+    $end  shift, and go to state 48
+
+
+State 16
+
+    4 s: MainFunc .
+
+    $default  reduce using rule 4 (s)
+
+
+State 17
+
+    3 s: Stmt .
+
+    $default  reduce using rule 3 (s)
+
+
+State 18
+
+   17 Stmt: DeclarationM . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 50
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 19
+
+   15 Stmt: StructStmt . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 51
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 20
+
+   53 Assign: FuncCall . sc
+   54       | FuncCall . EQ Assign
+
+    sc  shift, and go to state 52
+    EQ  shift, and go to state 53
+
+
+State 21
+
+   19 Stmt: FuncDef . CompStmt
+
+    LB  shift, and go to state 54
+
+    CompStmt  go to state 55
+
+
+State 22
+
+   14 Stmt: SwitchCase . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 56
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 23
+
+   12 Stmt: ForStmt . Stmt
+   13     | ForStmt . CompStmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    LB      shift, and go to state 54
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 57
+    CompStmt      go to state 58
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 24
+
+   10 Stmt: WhileStmt . Stmt
+   11     | WhileStmt . CompStmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    LB      shift, and go to state 54
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 59
+    CompStmt      go to state 60
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 25
+
+   18 Stmt: DoWhile . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 61
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 26
+
+    6 Stmt: ifstmt . Stmt
+    7     | ifstmt . CompStmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    LB      shift, and go to state 54
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 62
+    CompStmt      go to state 63
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 27
+
+    8 Stmt: PrintFunc . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 64
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 28
+
+    9 Stmt: ScanFunc . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 65
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 29
+
+   16 Stmt: Assign . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 66
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 30
+
+   42 ForStmt: FOR OB . Assign sc expr sc AssignF CB
+
+    NUM  shift, and go to state 3
+    ID   shift, and go to state 4
+    sc   shift, and go to state 6
+
+    FuncCall  go to state 20
+    Assign    go to state 67
+
+
+State 31
+
+   45 ifstmt: IF OB . expr CB
+
+    NUM  shift, and go to state 68
+    ID   shift, and go to state 69
+
+    $default  reduce using rule 74 (expr)
+
+    expr  go to state 70
+
+
+State 32
+
+   58 Assign: NUM shorthand . Assign
+
+    NUM  shift, and go to state 3
+    ID   shift, and go to state 4
+    sc   shift, and go to state 6
+
+    FuncCall  go to state 20
+    Assign    go to state 71
+
+
+State 33
+
+   35 FuncCall: ID OB . CB
+
+    CB  shift, and go to state 72
+
+
+State 34
+
+   55 Assign: ID arithop . Assign
+
+    NUM  shift, and go to state 3
+    ID   shift, and go to state 4
+    sc   shift, and go to state 6
+
+    FuncCall  go to state 20
+    Assign    go to state 73
+
+
+State 35
+
+   56 Assign: ID EQ . Assign
+
+    NUM  shift, and go to state 3
+    ID   shift, and go to state 4
+    sc   shift, and go to state 6
+
+    FuncCall  go to state 20
+    Assign    go to state 74
+
+
+State 36
+
+   57 Assign: ID shorthand . Assign
+
+    NUM  shift, and go to state 3
+    ID   shift, and go to state 4
+    sc   shift, and go to state 6
+
+    FuncCall  go to state 20
+    Assign    go to state 75
+
+
+State 37
+
+   46 PrintFunc: PRINTF OB . STRING ArgumentS CB sc
+
+    STRING  shift, and go to state 76
+
+
+State 38
+
+   43 WhileStmt: WHILE OB . expr CB
+
+    NUM  shift, and go to state 68
+    ID   shift, and go to state 69
+
+    $default  reduce using rule 74 (expr)
+
+    expr  go to state 77
+
+
+State 39
+
+   32 StructStmt: STRUCT ID . LB DeclarationS RB sc
+
+    LB  shift, and go to state 78
+
+
+State 40
+
+   23 Declaration: ID . DeclarationC
+   24            | ID . EQ NUM DeclarationC
+   25            | ID . EQ ID DeclarationC
+   36 FuncDef: TYPE ID . OB ArgumentM CB
+
+    OB     shift, and go to state 79
+    sc     shift, and go to state 80
+    EQ     shift, and go to state 81
+    COMMA  shift, and go to state 82
+
+    DeclarationC  go to state 83
+
+
+State 41
+
+    5 MainFunc: TYPE MAIN . OB CB CompStmt
+
+    OB  shift, and go to state 84
+
+
+State 42
+
+   22 DeclarationM: TYPE Declaration .
+
+    $default  reduce using rule 22 (DeclarationM)
+
+
+State 43
+
+   47 ScanFunc: SCANF OB . STRING ArgumentS CB sc
+
+    STRING  shift, and go to state 85
+
+
+State 44
+
+    1 s: HFILE s .
+
+    $default  reduce using rule 1 (s)
+
+
+State 45
+
+    2 s: DEFINE s .
+
+    $default  reduce using rule 2 (s)
+
+
+State 46
+
+   44 DoWhile: DO LB . Stmt RB WhileStmt sc
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 86
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 47
+
+   37 SwitchCase: SWITCH OB . ID CB LB SwitchStmt DefaultStmt RB
+
+    ID  shift, and go to state 87
+
+
+State 48
+
+    0 $accept: s $end .
+
+    $default  accept
+
+
+State 49
+
+   22 DeclarationM: TYPE . Declaration
+   36 FuncDef: TYPE . ID OB ArgumentM CB
+
+    ID  shift, and go to state 40
+
+    Declaration  go to state 42
+
+
+State 50
+
+   17 Stmt: DeclarationM Stmt .
+
+    $default  reduce using rule 17 (Stmt)
+
+
+State 51
+
+   15 Stmt: StructStmt Stmt .
+
+    $default  reduce using rule 15 (Stmt)
+
+
+State 52
+
+   53 Assign: FuncCall sc .
+
+    $default  reduce using rule 53 (Assign)
+
+
+State 53
+
+   54 Assign: FuncCall EQ . Assign
+
+    NUM  shift, and go to state 3
+    ID   shift, and go to state 4
+    sc   shift, and go to state 6
+
+    FuncCall  go to state 20
+    Assign    go to state 88
+
+
+State 54
+
+   21 CompStmt: LB . Stmt RB Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 89
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 55
+
+   19 Stmt: FuncDef CompStmt .
+
+    $default  reduce using rule 19 (Stmt)
+
+
+State 56
+
+   14 Stmt: SwitchCase Stmt .
+
+    $default  reduce using rule 14 (Stmt)
+
+
+State 57
+
+   12 Stmt: ForStmt Stmt .
+
+    $default  reduce using rule 12 (Stmt)
+
+
+State 58
+
+   13 Stmt: ForStmt CompStmt .
+
+    $default  reduce using rule 13 (Stmt)
+
+
+State 59
+
+   10 Stmt: WhileStmt Stmt .
+
+    $default  reduce using rule 10 (Stmt)
+
+
+State 60
+
+   11 Stmt: WhileStmt CompStmt .
+
+    $default  reduce using rule 11 (Stmt)
+
+
+State 61
+
+   18 Stmt: DoWhile Stmt .
+
+    $default  reduce using rule 18 (Stmt)
+
+
+State 62
+
+    6 Stmt: ifstmt Stmt .
+
+    $default  reduce using rule 6 (Stmt)
+
+
+State 63
+
+    7 Stmt: ifstmt CompStmt .
+
+    $default  reduce using rule 7 (Stmt)
+
+
+State 64
+
+    8 Stmt: PrintFunc Stmt .
+
+    $default  reduce using rule 8 (Stmt)
+
+
+State 65
+
+    9 Stmt: ScanFunc Stmt .
+
+    $default  reduce using rule 9 (Stmt)
+
+
+State 66
+
+   16 Stmt: Assign Stmt .
+
+    $default  reduce using rule 16 (Stmt)
+
+
+State 67
+
+   42 ForStmt: FOR OB Assign . sc expr sc AssignF CB
+
+    sc  shift, and go to state 90
+
+
+State 68
+
+   66 expr: NUM .
+   68     | NUM . relop ID
+   69     | NUM . relop NUM
+
+    relop  shift, and go to state 91
+
+    $default  reduce using rule 66 (expr)
+
+
+State 69
+
+   67 expr: ID .
+   70     | ID . relop ID
+   71     | ID . relop NUM
+   72     | ID . arithop ID
+   73     | ID . arithop NUM
+
+    relop    shift, and go to state 92
+    arithop  shift, and go to state 93
+
+    $default  reduce using rule 67 (expr)
+
+
+State 70
+
+   45 ifstmt: IF OB expr . CB
+
+    CB  shift, and go to state 94
+
+
+State 71
+
+   58 Assign: NUM shorthand Assign .
+
+    $default  reduce using rule 58 (Assign)
+
+
+State 72
+
+   35 FuncCall: ID OB CB .
+
+    $default  reduce using rule 35 (FuncCall)
+
+
+State 73
+
+   55 Assign: ID arithop Assign .
+
+    $default  reduce using rule 55 (Assign)
+
+
+State 74
+
+   56 Assign: ID EQ Assign .
+
+    $default  reduce using rule 56 (Assign)
+
+
+State 75
+
+   57 Assign: ID shorthand Assign .
+
+    $default  reduce using rule 57 (Assign)
+
+
+State 76
+
+   46 PrintFunc: PRINTF OB STRING . ArgumentS CB sc
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 50 (ArgumentS)
+
+    ArgumentS  go to state 96
+
+
+State 77
+
+   43 WhileStmt: WHILE OB expr . CB
+
+    CB  shift, and go to state 97
+
+
+State 78
+
+   32 StructStmt: STRUCT ID LB . DeclarationS RB sc
+
+    TYPE  shift, and go to state 98
+
+    $default  reduce using rule 34 (DeclarationS)
+
+    DeclarationM  go to state 99
+    DeclarationS  go to state 100
+
+
+State 79
+
+   36 FuncDef: TYPE ID OB . ArgumentM CB
+
+    TYPE  shift, and go to state 101
+
+    $default  reduce using rule 29 (ArgumentM)
+
+    ArgumentM  go to state 102
+
+
+State 80
+
+   27 DeclarationC: sc .
+
+    $default  reduce using rule 27 (DeclarationC)
+
+
+State 81
+
+   24 Declaration: ID EQ . NUM DeclarationC
+   25            | ID EQ . ID DeclarationC
+
+    NUM  shift, and go to state 103
+    ID   shift, and go to state 104
+
+
+State 82
+
+   26 DeclarationC: COMMA . Declaration
+
+    ID  shift, and go to state 105
+
+    Declaration  go to state 106
+
+
+State 83
+
+   23 Declaration: ID DeclarationC .
+
+    $default  reduce using rule 23 (Declaration)
+
+
+State 84
+
+    5 MainFunc: TYPE MAIN OB . CB CompStmt
+
+    CB  shift, and go to state 107
+
+
+State 85
+
+   47 ScanFunc: SCANF OB STRING . ArgumentS CB sc
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 50 (ArgumentS)
+
+    ArgumentS  go to state 108
+
+
+State 86
+
+   44 DoWhile: DO LB Stmt . RB WhileStmt sc
+
+    RB  shift, and go to state 109
+
+
+State 87
+
+   37 SwitchCase: SWITCH OB ID . CB LB SwitchStmt DefaultStmt RB
+
+    CB  shift, and go to state 110
+
+
+State 88
+
+   54 Assign: FuncCall EQ Assign .
+
+    $default  reduce using rule 54 (Assign)
+
+
+State 89
+
+   21 CompStmt: LB Stmt . RB Stmt
+
+    RB  shift, and go to state 111
+
+
+State 90
+
+   42 ForStmt: FOR OB Assign sc . expr sc AssignF CB
+
+    NUM  shift, and go to state 68
+    ID   shift, and go to state 69
+
+    $default  reduce using rule 74 (expr)
+
+    expr  go to state 112
+
+
+State 91
+
+   68 expr: NUM relop . ID
+   69     | NUM relop . NUM
+
+    NUM  shift, and go to state 113
+    ID   shift, and go to state 114
+
+
+State 92
+
+   70 expr: ID relop . ID
+   71     | ID relop . NUM
+
+    NUM  shift, and go to state 115
+    ID   shift, and go to state 116
+
+
+State 93
+
+   72 expr: ID arithop . ID
+   73     | ID arithop . NUM
+
+    NUM  shift, and go to state 117
+    ID   shift, and go to state 118
+
+
+State 94
+
+   45 ifstmt: IF OB expr CB .
+
+    $default  reduce using rule 45 (ifstmt)
+
+
+State 95
+
+   48 ArgumentS: COMMA . AMP ID ArgumentS
+   49          | COMMA . ID ArgumentS
+
+    ID   shift, and go to state 119
+    AMP  shift, and go to state 120
+
+
+State 96
+
+   46 PrintFunc: PRINTF OB STRING ArgumentS . CB sc
+
+    CB  shift, and go to state 121
+
+
+State 97
+
+   43 WhileStmt: WHILE OB expr CB .
+
+    $default  reduce using rule 43 (WhileStmt)
+
+
+State 98
+
+   22 DeclarationM: TYPE . Declaration
+
+    ID  shift, and go to state 105
+
+    Declaration  go to state 42
+
+
+State 99
+
+   33 DeclarationS: DeclarationM . DeclarationS
+
+    TYPE  shift, and go to state 98
+
+    $default  reduce using rule 34 (DeclarationS)
+
+    DeclarationM  go to state 99
+    DeclarationS  go to state 122
+
+
+State 100
+
+   32 StructStmt: STRUCT ID LB DeclarationS . RB sc
+
+    RB  shift, and go to state 123
+
+
+State 101
+
+   28 ArgumentM: TYPE . ID ArgumentC
+
+    ID  shift, and go to state 124
+
+
+State 102
+
+   36 FuncDef: TYPE ID OB ArgumentM . CB
+
+    CB  shift, and go to state 125
+
+
+State 103
+
+   24 Declaration: ID EQ NUM . DeclarationC
+
+    sc     shift, and go to state 80
+    COMMA  shift, and go to state 82
+
+    DeclarationC  go to state 126
+
+
+State 104
+
+   25 Declaration: ID EQ ID . DeclarationC
+
+    sc     shift, and go to state 80
+    COMMA  shift, and go to state 82
+
+    DeclarationC  go to state 127
+
+
+State 105
+
+   23 Declaration: ID . DeclarationC
+   24            | ID . EQ NUM DeclarationC
+   25            | ID . EQ ID DeclarationC
+
+    sc     shift, and go to state 80
+    EQ     shift, and go to state 81
+    COMMA  shift, and go to state 82
+
+    DeclarationC  go to state 83
+
+
+State 106
+
+   26 DeclarationC: COMMA Declaration .
+
+    $default  reduce using rule 26 (DeclarationC)
+
+
+State 107
+
+    5 MainFunc: TYPE MAIN OB CB . CompStmt
+
+    LB  shift, and go to state 54
+
+    CompStmt  go to state 128
+
+
+State 108
+
+   47 ScanFunc: SCANF OB STRING ArgumentS . CB sc
+
+    CB  shift, and go to state 129
+
+
+State 109
+
+   44 DoWhile: DO LB Stmt RB . WhileStmt sc
+
+    WHILE  shift, and go to state 7
+
+    WhileStmt  go to state 130
+
+
+State 110
+
+   37 SwitchCase: SWITCH OB ID CB . LB SwitchStmt DefaultStmt RB
+
+    LB  shift, and go to state 131
+
+
+State 111
+
+   21 CompStmt: LB Stmt RB . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 132
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 112
+
+   42 ForStmt: FOR OB Assign sc expr . sc AssignF CB
+
+    sc  shift, and go to state 133
+
+
+State 113
+
+   69 expr: NUM relop NUM .
+
+    $default  reduce using rule 69 (expr)
+
+
+State 114
+
+   68 expr: NUM relop ID .
+
+    $default  reduce using rule 68 (expr)
+
+
+State 115
+
+   71 expr: ID relop NUM .
+
+    $default  reduce using rule 71 (expr)
+
+
+State 116
+
+   70 expr: ID relop ID .
+
+    $default  reduce using rule 70 (expr)
+
+
+State 117
+
+   73 expr: ID arithop NUM .
+
+    $default  reduce using rule 73 (expr)
+
+
+State 118
+
+   72 expr: ID arithop ID .
+
+    $default  reduce using rule 72 (expr)
+
+
+State 119
+
+   49 ArgumentS: COMMA ID . ArgumentS
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 50 (ArgumentS)
+
+    ArgumentS  go to state 134
+
+
+State 120
+
+   48 ArgumentS: COMMA AMP . ID ArgumentS
+
+    ID  shift, and go to state 135
+
+
+State 121
+
+   46 PrintFunc: PRINTF OB STRING ArgumentS CB . sc
+
+    sc  shift, and go to state 136
+
+
+State 122
+
+   33 DeclarationS: DeclarationM DeclarationS .
+
+    $default  reduce using rule 33 (DeclarationS)
+
+
+State 123
+
+   32 StructStmt: STRUCT ID LB DeclarationS RB . sc
+
+    sc  shift, and go to state 137
+
+
+State 124
+
+   28 ArgumentM: TYPE ID . ArgumentC
+
+    COMMA  shift, and go to state 138
+
+    $default  reduce using rule 31 (ArgumentC)
+
+    ArgumentC  go to state 139
+
+
+State 125
+
+   36 FuncDef: TYPE ID OB ArgumentM CB .
+
+    $default  reduce using rule 36 (FuncDef)
+
+
+State 126
+
+   24 Declaration: ID EQ NUM DeclarationC .
+
+    $default  reduce using rule 24 (Declaration)
+
+
+State 127
+
+   25 Declaration: ID EQ ID DeclarationC .
+
+    $default  reduce using rule 25 (Declaration)
+
+
+State 128
+
+    5 MainFunc: TYPE MAIN OB CB CompStmt .
+
+    $default  reduce using rule 5 (MainFunc)
+
+
+State 129
+
+   47 ScanFunc: SCANF OB STRING ArgumentS CB . sc
+
+    sc  shift, and go to state 140
+
+
+State 130
+
+   44 DoWhile: DO LB Stmt RB WhileStmt . sc
+
+    sc  shift, and go to state 141
+
+
+State 131
+
+   37 SwitchCase: SWITCH OB ID CB LB . SwitchStmt DefaultStmt RB
+
+    CASE  shift, and go to state 142
+
+    $default  reduce using rule 39 (SwitchStmt)
+
+    SwitchStmt  go to state 143
+
+
+State 132
+
+   21 CompStmt: LB Stmt RB Stmt .
+
+    $default  reduce using rule 21 (CompStmt)
+
+
+State 133
+
+   42 ForStmt: FOR OB Assign sc expr sc . AssignF CB
+
+    NUM  shift, and go to state 144
+    ID   shift, and go to state 145
+
+    $default  reduce using rule 65 (AssignF)
+
+    AssignF  go to state 146
+
+
+State 134
+
+   49 ArgumentS: COMMA ID ArgumentS .
+
+    $default  reduce using rule 49 (ArgumentS)
+
+
+State 135
+
+   48 ArgumentS: COMMA AMP ID . ArgumentS
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 50 (ArgumentS)
+
+    ArgumentS  go to state 147
+
+
+State 136
+
+   46 PrintFunc: PRINTF OB STRING ArgumentS CB sc .
+
+    $default  reduce using rule 46 (PrintFunc)
+
+
+State 137
+
+   32 StructStmt: STRUCT ID LB DeclarationS RB sc .
+
+    $default  reduce using rule 32 (StructStmt)
+
+
+State 138
+
+   30 ArgumentC: COMMA . ArgumentM
+
+    TYPE  shift, and go to state 101
+
+    $default  reduce using rule 29 (ArgumentM)
+
+    ArgumentM  go to state 148
+
+
+State 139
+
+   28 ArgumentM: TYPE ID ArgumentC .
+
+    $default  reduce using rule 28 (ArgumentM)
+
+
+State 140
+
+   47 ScanFunc: SCANF OB STRING ArgumentS CB sc .
+
+    $default  reduce using rule 47 (ScanFunc)
+
+
+State 141
+
+   44 DoWhile: DO LB Stmt RB WhileStmt sc .
+
+    $default  reduce using rule 44 (DoWhile)
+
+
+State 142
+
+   38 SwitchStmt: CASE . NUM COLON Stmt BREAK sc SwitchStmt
+
+    NUM  shift, and go to state 149
+
+
+State 143
+
+   37 SwitchCase: SWITCH OB ID CB LB SwitchStmt . DefaultStmt RB
+
+    DEFAULT  shift, and go to state 150
+
+    $default  reduce using rule 41 (DefaultStmt)
+
+    DefaultStmt  go to state 151
+
+
+State 144
+
+   61 AssignF: NUM .
+   64        | NUM . shorthand AssignF
+
+    shorthand  shift, and go to state 152
+
+    $default  reduce using rule 61 (AssignF)
+
+
+State 145
+
+   60 AssignF: ID .
+   62        | ID . EQ AssignF
+   63        | ID . shorthand AssignF
+
+    EQ         shift, and go to state 153
+    shorthand  shift, and go to state 154
+
+    $default  reduce using rule 60 (AssignF)
+
+
+State 146
+
+   42 ForStmt: FOR OB Assign sc expr sc AssignF . CB
+
+    CB  shift, and go to state 155
+
+
+State 147
+
+   48 ArgumentS: COMMA AMP ID ArgumentS .
+
+    $default  reduce using rule 48 (ArgumentS)
+
+
+State 148
+
+   30 ArgumentC: COMMA ArgumentM .
+
+    $default  reduce using rule 30 (ArgumentC)
+
+
+State 149
+
+   38 SwitchStmt: CASE NUM . COLON Stmt BREAK sc SwitchStmt
+
+    COLON  shift, and go to state 156
+
+
+State 150
+
+   40 DefaultStmt: DEFAULT . COLON Stmt
+
+    COLON  shift, and go to state 157
+
+
+State 151
+
+   37 SwitchCase: SWITCH OB ID CB LB SwitchStmt DefaultStmt . RB
+
+    RB  shift, and go to state 158
+
+
+State 152
+
+   64 AssignF: NUM shorthand . AssignF
+
+    NUM  shift, and go to state 144
+    ID   shift, and go to state 145
+
+    $default  reduce using rule 65 (AssignF)
+
+    AssignF  go to state 159
+
+
+State 153
+
+   62 AssignF: ID EQ . AssignF
+
+    NUM  shift, and go to state 144
+    ID   shift, and go to state 145
+
+    $default  reduce using rule 65 (AssignF)
+
+    AssignF  go to state 160
+
+
+State 154
+
+   63 AssignF: ID shorthand . AssignF
+
+    NUM  shift, and go to state 144
+    ID   shift, and go to state 145
+
+    $default  reduce using rule 65 (AssignF)
+
+    AssignF  go to state 161
+
+
+State 155
+
+   42 ForStmt: FOR OB Assign sc expr sc AssignF CB .
+
+    $default  reduce using rule 42 (ForStmt)
+
+
+State 156
+
+   38 SwitchStmt: CASE NUM COLON . Stmt BREAK sc SwitchStmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 162
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 157
+
+   40 DefaultStmt: DEFAULT COLON . Stmt
+
+    FOR     shift, and go to state 1
+    IF      shift, and go to state 2
+    NUM     shift, and go to state 3
+    ID      shift, and go to state 4
+    PRINTF  shift, and go to state 5
+    sc      shift, and go to state 6
+    WHILE   shift, and go to state 7
+    STRUCT  shift, and go to state 8
+    TYPE    shift, and go to state 49
+    SCANF   shift, and go to state 10
+    DO      shift, and go to state 13
+    SWITCH  shift, and go to state 14
+
+    $default  reduce using rule 20 (Stmt)
+
+    Stmt          go to state 163
+    DeclarationM  go to state 18
+    StructStmt    go to state 19
+    FuncCall      go to state 20
+    FuncDef       go to state 21
+    SwitchCase    go to state 22
+    ForStmt       go to state 23
+    WhileStmt     go to state 24
+    DoWhile       go to state 25
+    ifstmt        go to state 26
+    PrintFunc     go to state 27
+    ScanFunc      go to state 28
+    Assign        go to state 29
+
+
+State 158
+
+   37 SwitchCase: SWITCH OB ID CB LB SwitchStmt DefaultStmt RB .
+
+    $default  reduce using rule 37 (SwitchCase)
+
+
+State 159
+
+   64 AssignF: NUM shorthand AssignF .
+
+    $default  reduce using rule 64 (AssignF)
+
+
+State 160
+
+   62 AssignF: ID EQ AssignF .
+
+    $default  reduce using rule 62 (AssignF)
+
+
+State 161
+
+   63 AssignF: ID shorthand AssignF .
+
+    $default  reduce using rule 63 (AssignF)
+
+
+State 162
+
+   38 SwitchStmt: CASE NUM COLON Stmt . BREAK sc SwitchStmt
+
+    BREAK  shift, and go to state 164
+
+
+State 163
+
+   40 DefaultStmt: DEFAULT COLON Stmt .
+
+    $default  reduce using rule 40 (DefaultStmt)
+
+
+State 164
+
+   38 SwitchStmt: CASE NUM COLON Stmt BREAK . sc SwitchStmt
+
+    sc  shift, and go to state 165
+
+
+State 165
+
+   38 SwitchStmt: CASE NUM COLON Stmt BREAK sc . SwitchStmt
+
+    CASE  shift, and go to state 142
+
+    $default  reduce using rule 39 (SwitchStmt)
+
+    SwitchStmt  go to state 166
+
+
+State 166
+
+   38 SwitchStmt: CASE NUM COLON Stmt BREAK sc SwitchStmt .
+
+    $default  reduce using rule 38 (SwitchStmt)
